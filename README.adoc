@@ -1,0 +1,59 @@
+= Spring Web Redis Cache
+
+An example of spring web application with Redis Cache.
+
+== How to run.
+
+- Start redis docker instance.
++
+----
+docker-compose up -d
+----
+
+- Start spring application.
++
+----
+mvn spring-boot:run
+----
+
+== Verification
+
+- Login to Redis server using cli
++
+----
+$ docker exec -it k-redis redis-cli
+----
+
+- Check if any key exists
++
+----
+> KEYS *
+----
++
+.output
+----
+(empty array)
+----
+
+- Execute curl command to retrieve a person by id, which will retreive from DB, as well as will add to cache.
++
+----
+$ curl http://localhost:8080/api/person/2
+----
+
+- Check now, if any key exists
++
+----
+> KEYS *
+----
++
+.output
+----
+1) "person::2"
+----
+
+- Now use, use the key to retrieve the value.
++
+----
+> GET person::2
+----

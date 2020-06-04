@@ -1,0 +1,9 @@
+version: "2.4"
+services:
+   redis:
+      image: redis
+      container_name: k-redis
+      mem_limit: 512m
+      ports:
+         - 6379:6379
+ 
