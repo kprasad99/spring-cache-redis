@@ -1,9 +1,59 @@
 version: "2.4"
 services:
-   redis:
-      image: redis
-      container_name: k-redis
-      mem_limit: 512m
+   redis-1:
+      image: redis:6.2.1-alpine3.13
+      mem_limit: 256m
+      hostname: redis-1
+      environment:
+         - ALLOW_EMPTY_PASSWORD=yes
+      networks:
+         - k-redis-net
+   sentinel-1:
+      image: redis:6.2.1-alpine3.13
       ports:
-         - 6379:6379
- 
+         - 16379:6379
+      mem_limit: 256m
+      hostname: sentinel-1
+      volumes:
+         - ${PWD}/sentinel-config/sentinel-1.conf:/etc/redis/sentinel.conf
+      command: redis-server /etc/redis/sentinel.conf --sentinel
+      networks:
+         - k-redis-net
+   redis-2:
+      image: redis:6.2.1-alpine3.13
+      mem_limit: 256m
+      hostname: redis-2
+      networks:
+         - k-redis-net
+   sentinel-2:
+      image: redis:6.2.1-alpine3.13
+      ports:
+         - 26379:6379
+      mem_limit: 256m
+      hostname: sentinel-2
+      volumes:
+         - ${PWD}/sentinel-config/sentinel-2.conf:/etc/redis/sentinel.conf
+      command: redis-server /etc/redis/sentinel.conf --sentinel
+      networks:
+         - k-redis-net
+
+   redis-3:
+      image: redis:6.2.1-alpine3.13
+      mem_limit: 256m
+      hostname: redis-3
+      networks:
+         - k-redis-net
+   sentinel-3:
+      image: redis:6.2.1-alpine3.13
+      ports:
+         - 36379:6379
+      mem_limit: 256m
+      hostname: sentinel-3
+      volumes:
+         - ${PWD}/sentinel-config/sentinel-3.conf:/etc/redis/sentinel.conf
+      command: redis-server /etc/redis/sentinel.conf --sentinel
+      networks:
+         - k-redis-net
+
+networks:
+   k-redis-net:

@@ -1,8 +1,12 @@
 spring:
   redis:
-    host: localhost
-    port: 6379
-    client-name: k-redis
+    port: 26379
+    sentinel:
+      master: k_redis
+      nodes:
+        - localhost:16379
+        - localhost:26379
+        - localhost:36379
   cache:
     type: redis
 management:
